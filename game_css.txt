@@ -1,0 +1,152 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: #ffffff;
+    overflow: hidden
+}
+
+#page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh
+}
+
+.side-logos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.side-logos-left {
+    transform: translateX(-45px);
+    /* 左画像はさらに少し左へずらす */
+}
+
+.side-logos-right {
+    transform: translateX(45px);
+    /* 右画像はさらに右へずらす */
+}
+
+.side-logos img {
+    width: 320px;
+    height: 320px;
+    object-fit: contain
+}
+
+#unity-container {
+    position: relative;
+    flex-shrink: 0
+}
+
+#unity-container.unity-desktop {
+    flex-shrink: 0
+}
+
+#unity-container.unity-mobile {
+    position: fixed;
+    width: 100%;
+    height: 100%
+}
+
+#unity-canvas {
+    background: #ffffff
+}
+
+.unity-mobile #unity-canvas {
+    width: 100%;
+    height: 100%
+}
+
+#unity-loading-bar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none
+}
+
+#unity-logo {
+    width: 154px;
+    height: 130px;
+    background: url('unity-logo-light.png') no-repeat center
+}
+
+#unity-progress-bar-empty {
+    width: 141px;
+    height: 18px;
+    margin-top: 10px;
+    margin-left: 6.5px;
+    background: url('progress-bar-empty-light.png') no-repeat center
+}
+
+#unity-progress-bar-full {
+    width: 0%;
+    height: 18px;
+    margin-top: 10px;
+    background: url('progress-bar-full-light.png') no-repeat center
+}
+
+#unity-footer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 38px
+}
+
+.unity-mobile #unity-footer {
+    display: none
+}
+
+#unity-webgl-logo {
+    width: 204px;
+    height: 38px;
+    background: url('webgl-logo.png') no-repeat center
+}
+
+.footer-center {
+    display: flex;
+    align-items: center;
+    color: #000000;
+    font-family: arial;
+    font-size: 14px
+}
+
+.footer-center img {
+    margin-right: 5px
+}
+
+.footer-right {
+    display: flex;
+    align-items: center
+}
+
+#unity-build-title {
+    margin-right: 10px;
+    line-height: 38px;
+    font-family: arial;
+    font-size: 18px
+}
+
+#unity-fullscreen-button {
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    background: url('fullscreen-button.png') no-repeat center
+}
+
+#unity-warning {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%);
+    background: #ffffff;
+    padding: 10px;
+    display: none
+}

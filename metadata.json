@@ -1,0 +1,5 @@
+{
+  "name": "WebGL Game Launcher",
+  "description": "A web-based launcher for WebGL games.",
+  "requestFramePermissions": []
+}

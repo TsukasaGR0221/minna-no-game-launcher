@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Animal relay</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+</head>
+
+<body>
+  <div id="page-wrapper">
+    <div class="side-logos side-logos-left">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+    </div>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div class="footer-center" style="text-align: center;">
+          <span><img src="TemplateData/fullscreen-button.png" style="width: 24px; height: 24px; vertical-align: -7px;"
+              alt="">をクリック、またはFキーを押して全画面表示にしてください<br>（全画面表示を終了する時はEscキーを押してください）</span>
+        </div>
+        <div class="footer-right">
+          <div id="unity-build-title">Animal relay</div>
+          <div id="unity-fullscreen-button"></div>
+        </div>
+      </div>
+    </div>
+    <div class="side-logos side-logos-right">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+      <img src="TemplateData/side-logo.png" alt="Logo">
+    </div>
+  </div>
+  <script>
+
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    var warningBanner = document.querySelector("#unity-warning");
+
+    // Shows a temporary message banner/ribbon for a few seconds, or
+    // a permanent error message on top of the canvas if type=='error'.
+    // If type=='warning', a yellow highlight color is used.
+    // Modify or remove this function to customize the visually presented
+    // way that non-critical warnings and error messages are presented to the
+    // user.
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+      }
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        setTimeout(function () {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
+      }
+      updateBannerVisibility();
+    }
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/Build.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/Build.data",
+      frameworkUrl: buildUrl + "/Build.framework.js",
+      codeUrl: buildUrl + "/Build.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "Animal relay",
+      productVersion: "1.0",
+      showBanner: unityShowBanner,
+    };
+
+    // By default, Unity keeps WebGL canvas render target size matched with
+    // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+    // Set this to false if you want to decouple this synchronization from
+    // happening inside the engine, and you would instead like to size up
+    // the canvas DOM size and WebGL render target sizes yourself.
+    // config.matchWebGLToCanvasSize = false;
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      container.className = "unity-mobile";
+      canvas.className = "unity-mobile";
+
+      // To lower canvas resolution on mobile devices to gain some
+      // performance, uncomment the following line:
+      // config.devicePixelRatio = 1;
+
+
+    } else {
+      // Desktop style: Calculate canvas size to fit in available space
+      function resizeDesktop() {
+        var footerHeight = 50;
+        var aspectRatio = 16 / 9;
+
+        // Canvas is 1920x1080 (16/9), each side logo column is 340px width at 1080px canvas height
+        // Total base width: 1920 + 340 * 2 = 2600
+        var combinedWidthRatio = 2600 / 1080;
+
+        var availableWidth = window.innerWidth;
+        var availableHeight = window.innerHeight - footerHeight;
+
+        var canvasWidth, canvasHeight;
+        if (availableWidth / availableHeight > combinedWidthRatio) {
+          canvasHeight = availableHeight;
+        } else {
+          canvasHeight = availableWidth / combinedWidthRatio;
+        }
+
+        canvasWidth = canvasHeight * aspectRatio;
+
+        canvas.style.width = canvasWidth + "px";
+        canvas.style.height = canvasHeight + "px";
+        canvas.style.flex = "none";
+
+        // Dynamically scale side logos based on canvas height
+        var scale = canvasHeight / 1080;
+        var sideLogos = document.querySelectorAll('.side-logos');
+        sideLogos.forEach(function (logoContainer) {
+          logoContainer.style.width = (340 * scale) + "px";
+          logoContainer.style.gap = (70 * scale) + "px";
+
+          // Scale the shift transform based on window resolution
+          if (logoContainer.classList.contains('side-logos-left')) {
+            logoContainer.style.transform = "translateX(-" + (45 * scale) + "px)";
+          }
+          if (logoContainer.classList.contains('side-logos-right')) {
+            logoContainer.style.transform = "translateX(" + (45 * scale) + "px)";
+          }
+
+          var imgs = logoContainer.querySelectorAll('img');
+          imgs.forEach(function (img) {
+            img.style.width = (320 * scale) + "px";
+            img.style.height = (320 * scale) + "px";
+          });
+        });
+      }
+
+      resizeDesktop();
+      window.addEventListener('resize', resizeDesktop);
+
+      // Focus canvas on click for keyboard input
+      canvas.addEventListener("click", function () {
+        canvas.focus();
+      });
+    }
+
+    loadingBar.style.display = "block";
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
+        loadingBar.style.display = "none";
+        fullscreenButton.onclick = () => {
+          unityInstance.SetFullscreen(1);
+        };
+        document.addEventListener('keyup', function (e) {
+          if (e.key === 'f' || e.key === 'F') {
+            unityInstance.SetFullscreen(1);
+          }
+        });
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+
+    document.body.appendChild(script);
+
+  </script>
+</body>
+
+</html>
