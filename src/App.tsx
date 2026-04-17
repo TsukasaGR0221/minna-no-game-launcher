@@ -161,8 +161,8 @@ export default function App() {
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleOpenGame = (game: Game) => {
-    // iframeを使わず、新しいタブで直接リンクを開く
-    window.open(game.gameUrl, '_blank', 'noopener,noreferrer');
+    // iframeを使わず、同じタブで直接リンクを開く
+    window.location.href = game.gameUrl;
   };
 
   useEffect(() => {
