@@ -280,6 +280,7 @@ export default function App() {
                     setFocusedIndex(globalIndex);
                     handleOpenGame(game);
                   }}
+                   onMouseEnter={() => setFocusedIndex(globalIndex)}
                   className={`bg-white rounded-2xl shadow-sm border transition-all flex flex-col cursor-pointer overflow-hidden ${
                     isFocused 
                       ? 'border-yellow-400 ring-4 ring-yellow-400 scale-[1.02] z-10 relative' 
